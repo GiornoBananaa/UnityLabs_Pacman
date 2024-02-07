@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 namespace Pacman
 {
@@ -12,7 +13,8 @@ namespace Pacman
         
         public void SetDirection(Vector2 direction)
         {
-            if(Math.Abs(direction.x) == Math.Abs(direction.y)) return;
+            if(Math.Abs(direction.x) == Math.Abs(direction.y) 
+               || CheckForWall(direction)) return;
             _direction = direction;
              _rigidbody.transform.right = direction;
         }
@@ -25,6 +27,11 @@ namespace Pacman
         private void Move()
         {
             _rigidbody.velocity = _direction * _speed;
+        }
+        
+        private bool CheckForWall(Vector2 direction)
+        {
+            return Physics2D.BoxCast((Vector2)(transform.position)+direction, transform.lossyScale*0.95f,0,Vector3.zero);
         }
     }
 }
