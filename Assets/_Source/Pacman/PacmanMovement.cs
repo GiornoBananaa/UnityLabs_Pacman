@@ -13,8 +13,8 @@ namespace Pacman
         
         public void SetDirection(Vector2 direction)
         {
-            if(Math.Abs(direction.x) == Math.Abs(direction.y) 
-               || CheckForWall(direction)) return;
+            if(Math.Abs(direction.x) == Math.Abs(direction.y)
+               /*|| CheckForWall(direction)*/) return;
             _direction = direction;
              _rigidbody.transform.right = direction;
         }
@@ -31,7 +31,10 @@ namespace Pacman
         
         private bool CheckForWall(Vector2 direction)
         {
-            return Physics2D.BoxCast((Vector2)(transform.position)+direction, transform.lossyScale*0.95f,0,Vector3.zero);
+            var pacmanScale = transform.lossyScale;
+            return Physics2D.BoxCast((Vector2)(transform.position) + direction,  
+                new Vector2(pacmanScale.x * 0.95f, pacmanScale.y*0.1f),
+                0,Vector2.zero);
         }
     }
 }
