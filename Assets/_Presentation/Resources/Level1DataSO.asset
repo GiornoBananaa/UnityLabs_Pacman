@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Level1DataSO
   m_EditorClassIdentifier: 
   <LevelData>k__BackingField:
-    <MaxScore>k__BackingField: 181
+    <MaxScore>k__BackingField: 182
+    <BonusScore>k__BackingField: 1
