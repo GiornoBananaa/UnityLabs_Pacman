@@ -1,39 +1,74 @@
-using System;
+using PathSystem;
 using UnityEngine;
 
-namespace Pacman
+namespace PacmanSystem
 {
-    public class PacmanMovement : MonoBehaviour
+    public class PacmanMovement
     {
-        [SerializeField] private Rigidbody2D _rigidbody;
-        [SerializeField] private float _speed;
+        private const float _maxDistanceForDirectionSet = 0.3f;
+        private const float _maxAngleForDirectionSet = 30;
+        private PathWalker _pathWalker;
+        private Transform _transform;
+        private Vector2 _direction;
+        private Vector2 _inputDirection;
+        private bool _isMomentForTurn;
 
-        private Vector3 _direction;
+        public PacmanMovement(Transform transform, float moveSpeed,PathNode startNode)
+        {
+            _pathWalker = new PathWalker(transform,moveSpeed,startNode);
+            _transform = transform;
+            _inputDirection = _direction;
+        }
         
         public void SetDirection(Vector2 direction)
         {
-            if(Math.Abs(direction.x) == Math.Abs(direction.y)
-               /*|| CheckForWall(direction)*/) return;
-            _direction = direction;
-             _rigidbody.transform.right = direction;
-        }
-        
-        private void Update()
-        {
-            Move();
+            if(_inputDirection==direction 
+               || Vector2.Distance(_transform.position,_pathWalker.CurrentNode.Point)>_maxDistanceForDirectionSet) return;
+            _inputDirection = direction;
+            if (_isMomentForTurn)
+                FindNearNodeOnDirection(direction);
+            else
+                TurnBack(direction);
         }
 
-        private void Move()
+        public void Move()
         {
-            _rigidbody.velocity = _direction * _speed;
+            if (_isMomentForTurn)
+            {
+                FindNearNodeOnDirection(_direction);
+                _isMomentForTurn = false;
+            }
+            
+            if (_pathWalker.Walk())
+            {
+                _isMomentForTurn = true;
+            }
         }
-        
-        private bool CheckForWall(Vector2 direction)
+        private bool TurnBack(Vector2 direction)
         {
-            var pacmanScale = transform.lossyScale;
-            return Physics2D.BoxCast((Vector2)(transform.position) + direction,  
-                new Vector2(pacmanScale.x * 0.95f, pacmanScale.y*0.1f),
-                0,Vector2.zero);
+            if (Mathf.Abs(Vector2.Angle(_pathWalker.PreviousNode.Point-(Vector2)_transform.position, direction)) < _maxAngleForDirectionSet)
+            {
+                _pathWalker.SetDirectPath(_pathWalker.PreviousNode);
+                _direction = direction;
+                return true;
+            }
+
+            return false;
+        }
+        private bool FindNearNodeOnDirection(Vector2 direction)
+        {
+            foreach (var node in _pathWalker.CurrentNode.NearNodes)
+            {
+                Vector2 nodeDirection = node.Point - (Vector2)_transform.position;
+                if (Mathf.Abs(Vector2.Angle(nodeDirection, direction)) < _maxAngleForDirectionSet)
+                {
+                    _pathWalker.SetDirectPath(node);
+                    _direction = direction;
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -1,5 +1,4 @@
-using System;
-using Pacman;
+using PacmanSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,12 +7,12 @@ namespace InputSystem
     public class InputListener : MonoBehaviour
     {
         private GameInputAction _inputAction;
-        private PacmanMovement _pacmanMovement;
+        private Pacman _pacman;
         private bool _pacmanIsMoving;
         
-        public void Construct(PacmanMovement pacmanMovement)
+        public void Construct(Pacman pacman)
         {
-            _pacmanMovement = pacmanMovement;
+            _pacman = pacman;
         }
 
         private void Awake()
@@ -54,7 +53,7 @@ namespace InputSystem
         private void OnMoveInput()
         {
             if(_pacmanIsMoving)
-                _pacmanMovement.SetDirection(_inputAction.GlobalActionMap.Move.ReadValue<Vector2>());
+                _pacman.SetDirection(_inputAction.GlobalActionMap.Move.ReadValue<Vector2>());
         }
         
         private void OnDestroy()

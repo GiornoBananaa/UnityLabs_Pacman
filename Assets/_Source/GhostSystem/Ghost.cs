@@ -1,5 +1,6 @@
 using System;
 using Core;
+using PacmanSystem;
 using PathSystem;
 using UnityEngine;
 
@@ -10,22 +11,26 @@ namespace GhostSystem
         protected bool TargetIsInRange;
         [SerializeField] private PathNode _startNode;
         private float _targetDetectionRange;
+        private bool _attackPacman;
         private LayerMask _targetLayerMask;
         private Transform _targetTransform;
         private PathWalker _pathWalker;
+        private Health _ghostHealth;
         protected MovementStateMachine MovementStateMachine;
         private AMovementState _defaultMovementState;
         
         protected Action OnTargetRangeEnter;
         protected Action OnTargetRangeExit;
         
-        public virtual void Construct(MovementStateMachine movementStateMachine, Transform targetTransform, GhostData ghostData)
+        public virtual void Construct(MovementStateMachine movementStateMachine, Health ghostHealth, Transform targetTransform, GhostData ghostData)
         {
             MovementStateMachine = movementStateMachine;
             _pathWalker = new PathWalker(transform,ghostData.MoveSpeed,_startNode);
+            _ghostHealth = ghostHealth;
             _targetTransform = targetTransform;
             _targetDetectionRange = ghostData.TargetDetectionRange;
             _targetLayerMask = ghostData.TargetLayerMask;
+            _attackPacman = true;
         }
         
         protected virtual void Start()
@@ -46,6 +51,11 @@ namespace GhostSystem
 
         public abstract void SetDefaultState();
         
+        public void EnableAttackGhost(bool enable)
+        {
+            _attackPacman = enable;
+        }
+        
         private void CheckForTarget()
         {
             if (_targetTransform==null)
@@ -65,6 +75,17 @@ namespace GhostSystem
                     _targetTransform = null;
                     OnTargetRangeExit?.Invoke();
                     TargetIsInRange = false;
+                }
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (_targetLayerMask.Contains(other.gameObject.layer))
+            {
+                if (!_attackPacman)
+                {
+                    _ghostHealth.LooseHeart();
                 }
             }
         }

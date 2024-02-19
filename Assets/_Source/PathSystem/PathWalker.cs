@@ -37,7 +37,6 @@ namespace PathSystem
                     return true;
                 SetCurrentPathNode(_path.Dequeue());
             }
-            
             return false;
         }
         
