@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GameStateSystem;
 using GhostSystem;
 using InputSystem;
@@ -17,6 +18,7 @@ namespace Core
         [SerializeField] private HealthBar _healthBar;
         [SerializeField] private ScoreView _scoreView;
         [SerializeField] private Ghost[] _ghosts;
+        [SerializeField] private Timer _gameTimer;
         
         private LevelDataSO _levelDataSO;
         private GhostDataSO _ghostDataSO;
@@ -27,7 +29,6 @@ namespace Core
         
         private void Awake()
         {
-            _gameStateMachine = new GameStateMachine();
             _levelDataSO = Resources.Load<LevelDataSO>("Level1DataSO");
             _ghostDataSO = Resources.Load<GhostDataSO>("GhostDataSO");
             _pacmanDataSO = Resources.Load<PacmanDataSO>("PacmanDataSO");
@@ -37,18 +38,31 @@ namespace Core
             _inputListener.Construct(_pacman);
             _pacmanHealth = new Health(_pacmanDataSO.PacmanData.HeartsCount);
             _healthBar.Construct(_pacmanHealth,_pacmanDataSO.PacmanData.HeartsCount);
-            _pacmanCollisionDetector.Construct(_scoreCounter,_pacmanHealth,_levelDataSO.LevelData.BonusScore);
+            List<IPacmanRevengeEffector> pacmanRevengeEffector = new List<IPacmanRevengeEffector>(_ghosts) { _pacmanCollisionDetector };
+            AState[] gameStates =
+            {
+                new WinGameState(),
+                new LooseGameState(_pacman,_ghosts, _healthBar, _gameTimer),
+                new GameDefaultState(_scoreCounter),
+                new PacmanRevengeGameState(pacmanRevengeEffector.ToArray()),
+            };
+            _gameStateMachine = new GameStateMachine(gameStates);
+            _pacmanCollisionDetector.Construct(_scoreCounter,_pacmanHealth,_gameStateMachine,
+                _levelDataSO.LevelData.BigBonusTime,_levelDataSO.LevelData.GhostKillScore,_levelDataSO.LevelData.BonusScore);
+            
             AMovementState[] movementStates =
             {
+                new NoMovementState(),
+                new UncontrolledMovementState(),
                 new RandomMovementState(),
                 new SteadyMovementState(),
                 new TargetedMovementState(_pacman.transform),
                 new ScaredMovementState(_pacman.transform)
             };
+            
             foreach (var ghost in _ghosts)
             {
-                Health ghostHealth = new Health(_ghostDataSO.GhostData.HeartsCount);
-                ghost.Construct(new MovementStateMachine(movementStates), ghostHealth,_pacman.transform, _ghostDataSO.GhostData);
+                ghost.Construct(new MovementStateMachine(movementStates),_pacman.transform, _ghostDataSO.GhostData);
             }
         }
     }

@@ -5,28 +5,25 @@ namespace PacmanSystem
 {
     public class PacmanMovement
     {
-        private const float _maxDistanceForDirectionSet = 0.3f;
         private const float _maxAngleForDirectionSet = 30;
         private PathWalker _pathWalker;
         private Transform _transform;
         private Vector2 _direction;
-        private Vector2 _inputDirection;
         private bool _isMomentForTurn;
 
         public PacmanMovement(Transform transform, float moveSpeed,PathNode startNode)
         {
             _pathWalker = new PathWalker(transform,moveSpeed,startNode);
             _transform = transform;
-            _inputDirection = _direction;
         }
         
         public void SetDirection(Vector2 direction)
         {
-            if(_inputDirection==direction 
-               || Vector2.Distance(_transform.position,_pathWalker.CurrentNode.Point)>_maxDistanceForDirectionSet) return;
-            _inputDirection = direction;
             if (_isMomentForTurn)
+            {
                 FindNearNodeOnDirection(direction);
+                _isMomentForTurn = false;
+            }
             else
                 TurnBack(direction);
         }
@@ -44,6 +41,7 @@ namespace PacmanSystem
                 _isMomentForTurn = true;
             }
         }
+        
         private bool TurnBack(Vector2 direction)
         {
             if (Mathf.Abs(Vector2.Angle(_pathWalker.PreviousNode.Point-(Vector2)_transform.position, direction)) < _maxAngleForDirectionSet)
@@ -55,6 +53,7 @@ namespace PacmanSystem
 
             return false;
         }
+        
         private bool FindNearNodeOnDirection(Vector2 direction)
         {
             foreach (var node in _pathWalker.CurrentNode.NearNodes)

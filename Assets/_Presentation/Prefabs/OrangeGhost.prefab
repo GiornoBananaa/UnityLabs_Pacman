@@ -50,6 +50,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startNode: {fileID: 0}
+  _sprite: {fileID: 4918286954138966644}
+  _collider: {fileID: 7509764451069038921}
   _checkPoints:
   - {fileID: 0}
   - {fileID: 0}

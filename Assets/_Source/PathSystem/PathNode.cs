@@ -7,7 +7,7 @@ namespace PathSystem
     {
         [field: SerializeField] public PathNode[] NearNodes { get; private set; }
         public Vector2 Point => transform.position;
-        
+        [field: SerializeField] public bool IsBlocked { get; private set; }
         
         [ExecuteInEditMode]
         private void OnDrawGizmos()

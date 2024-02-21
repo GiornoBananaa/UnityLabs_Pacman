@@ -28,7 +28,7 @@ namespace GhostSystem
                         nearestNodeDistance = newDistance;
                     }
                 }
-
+                
                 pathWalker.SetDirectPath(nearestNode);
             }
         }

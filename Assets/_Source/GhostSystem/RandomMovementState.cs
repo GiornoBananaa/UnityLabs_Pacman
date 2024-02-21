@@ -1,7 +1,6 @@
-using Core;
+﻿using Core;
 using PathSystem;
 using UnityEngine;
-
 
 namespace GhostSystem
 {

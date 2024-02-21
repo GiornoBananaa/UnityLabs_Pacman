@@ -15,3 +15,5 @@ MonoBehaviour:
   <LevelData>k__BackingField:
     <MaxScore>k__BackingField: 182
     <BonusScore>k__BackingField: 1
+    <BigBonusTime>k__BackingField: 4
+    <GhostKillScore>k__BackingField: 4

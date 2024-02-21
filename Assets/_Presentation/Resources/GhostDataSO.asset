@@ -14,9 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GhostData:
     <MoveSpeed>k__BackingField: 3
+    <HeartsCount>k__BackingField: 1
     <TargetDetectionRange>k__BackingField: 4
     <TargetLayerMask>k__BackingField:
       serializedVersion: 2
       m_Bits: 512
+    <ScaredColor>k__BackingField: {r: 0, g: 0.29561326, b: 0.9339623, a: 1}
+    <DeathColor>k__BackingField: {r: 0.4811321, g: 0.4811321, b: 0.4811321, a: 1}
+    <TimeForHeal>k__BackingField: 3
     <MinStateChangeTime>k__BackingField: 3
     <MaxStateChangeTime>k__BackingField: 8

@@ -50,6 +50,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startNode: {fileID: 0}
+  _sprite: {fileID: 8214076960347232565}
+  _collider: {fileID: 7114875021450198694}
 --- !u!212 &8214076960347232565
 SpriteRenderer:
   m_ObjectHideFlags: 0

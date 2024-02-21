@@ -10,9 +10,9 @@ namespace GhostSystem
         private bool _attacksPlayer;
         private float _timeForStateChange;
         
-        public override void Construct(MovementStateMachine movementStateMachine, Health ghostHealth, Transform targetTransform, GhostData ghostData)
+        public override void Construct(MovementStateMachine movementStateMachine, Transform targetTransform, GhostData ghostData)
         {
-            base.Construct(movementStateMachine, ghostHealth, targetTransform, ghostData);
+            base.Construct(movementStateMachine, targetTransform, ghostData);
             _minStateChangeTime = ghostData.MinStateChangeTime;
             _maxStateChangeTime = ghostData.MaxStateChangeTime;
         }

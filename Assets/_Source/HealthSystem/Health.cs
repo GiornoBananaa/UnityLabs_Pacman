@@ -16,13 +16,18 @@ namespace PacmanSystem
             HeartCount = MaxHeartCount;
         }
 
-        public void LooseHeart()
+        public bool LooseHeart()
         {
-            if(HeartCount <= 0) return;
+            if(HeartCount <= 0) return false;
             HeartCount--;
             OnHeartCountChange?.Invoke(HeartCount);
             if(HeartCount <= 0)
+            {
                 OnDeath?.Invoke();
+                return true;
+            }
+
+            return false;
         }
     }
 }

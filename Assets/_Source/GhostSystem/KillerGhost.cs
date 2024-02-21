@@ -12,6 +12,7 @@
         public override void SetDefaultState()
         {
             ChangeMovementState<RandomMovementState>();
+            
         }
         
         private void OnDestroy()

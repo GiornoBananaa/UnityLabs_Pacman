@@ -15,12 +15,14 @@ namespace PathSystem
         
         public PathNode CurrentNode => _currentNode;
         public PathNode PreviousNode => _previousNode;
-        
+        public bool IsMoving { get; private set; }
+
         public PathWalker(Transform transform,float moveSpeed, PathNode currentNode)
         {
             _transform = transform;
             _moveSpeed = moveSpeed;
             _currentNode = currentNode;
+            _previousNode = _currentNode;
             _path = new Queue<PathNode>();
         }
         
@@ -34,15 +36,19 @@ namespace PathSystem
             else
             {
                 if (_path.Count == 0)
+                {
+                    IsMoving = false;
                     return true;
+                }
                 SetCurrentPathNode(_path.Dequeue());
             }
+            
             return false;
         }
         
-        public void SetDestination(PathNode node)
+        public void SetDestination(PathNode node,bool fullAccess = false)
         {
-            _path = FindPath(_currentNode,node.Point);
+            _path = FindPath(_currentNode,node.Point,fullAccess);
             SetCurrentPathNode(_path.Peek());
         }
         
@@ -78,38 +84,43 @@ namespace PathSystem
         
         private void SetCurrentPathNode(PathNode node)
         {
+            IsMoving = true;
             _elapsedTime = 0;
             _previousNode = _currentNode;
             _currentNode = node;
         }
-        
-        private Queue<PathNode> FindPath(PathNode start,Vector2 destination)
+
+        private Queue<PathNode> FindPath(PathNode start, Vector2 destination, bool fullAccess = false)
         {
             HashSet<PathNode> closedSet = new HashSet<PathNode>();
             Queue<PathNode> path = new Queue<PathNode>();
             PathNode nearestNode = start;
+            
             while (true)
             {
-                float currentDistance = Vector2.Distance(nearestNode.Point, destination);
-                bool foundNextNode = false;
-                for (int i = 1; i < nearestNode.NearNodes.Length; i++)
+                PathNode currentNearestNode = null;
+                float currentNearestDistance = 100;
+                
+                for (int i = 0; i < nearestNode.NearNodes.Length; i++)
                 {
-                    if(closedSet.Contains(nearestNode.NearNodes[i]))
+                    if(closedSet.Contains(nearestNode.NearNodes[i]) || (!fullAccess && nearestNode.NearNodes[i].IsBlocked))
                         continue;
                     closedSet.Add(nearestNode.NearNodes[i]);
                     
                     float newDistance = Vector2.Distance(nearestNode.NearNodes[i].Point, destination);
-                    if (newDistance < currentDistance)
+                    if (currentNearestNode == null || newDistance < currentNearestDistance)
                     {
-                        nearestNode = nearestNode.NearNodes[i];
-                        currentDistance = newDistance;
-                        foundNextNode = true;
+                        currentNearestNode = nearestNode.NearNodes[i];
+                        currentNearestDistance = newDistance;
                     }
                 }
                 
-                if (!foundNextNode)
-                    nearestNode = nearestNode.NearNodes[0];
-                
+                if(currentNearestNode == null)
+                {
+                    throw new Exception("Path not found");
+                }
+
+                nearestNode = currentNearestNode;
                 path.Enqueue(nearestNode);
                 
                 if (nearestNode.Point == destination)

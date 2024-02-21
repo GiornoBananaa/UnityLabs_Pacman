@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Core;
 using PacmanSystem;
 using PathSystem;
@@ -6,31 +7,40 @@ using UnityEngine;
 
 namespace GhostSystem
 {
-    public abstract class Ghost : MonoBehaviour
+    public abstract class Ghost : MonoBehaviour, IPacmanRevengeEffector
     {
         protected bool TargetIsInRange;
         [SerializeField] private PathNode _startNode;
+        [SerializeField] private SpriteRenderer _sprite;
+        [SerializeField] private Collider2D _collider;
         private float _targetDetectionRange;
-        private bool _attackPacman;
+        private float _timeForHeal;
+        private bool _isPacmanRevenge;
+        private bool _goingBackOnBase;
+        private Color _defaultColor;
+        private Color _scaredColor;
+        private Color _deathColor;
         private LayerMask _targetLayerMask;
         private Transform _targetTransform;
         private PathWalker _pathWalker;
-        private Health _ghostHealth;
         protected MovementStateMachine MovementStateMachine;
         private AMovementState _defaultMovementState;
         
         protected Action OnTargetRangeEnter;
         protected Action OnTargetRangeExit;
         
-        public virtual void Construct(MovementStateMachine movementStateMachine, Health ghostHealth, Transform targetTransform, GhostData ghostData)
+        public virtual void Construct(MovementStateMachine movementStateMachine, Transform targetTransform, GhostData ghostData)
         {
             MovementStateMachine = movementStateMachine;
             _pathWalker = new PathWalker(transform,ghostData.MoveSpeed,_startNode);
-            _ghostHealth = ghostHealth;
             _targetTransform = targetTransform;
             _targetDetectionRange = ghostData.TargetDetectionRange;
             _targetLayerMask = ghostData.TargetLayerMask;
-            _attackPacman = true;
+            _isPacmanRevenge = false;
+            _scaredColor = ghostData.ScaredColor;
+            _deathColor = ghostData.DeathColor;
+            _defaultColor = _sprite.color;
+            _timeForHeal = ghostData.TimeForHeal;
         }
         
         protected virtual void Start()
@@ -48,16 +58,27 @@ namespace GhostSystem
         {
             MovementStateMachine.ChangeState<T>();
         }
-
+        
         public abstract void SetDefaultState();
         
-        public void EnableAttackGhost(bool enable)
+        public void EnablePacmanRevenge(bool enable)
         {
-            _attackPacman = enable;
+            _isPacmanRevenge = enable;
+            if (enable && !_goingBackOnBase)
+            {
+                _sprite.color = _scaredColor;
+                ChangeMovementState<ScaredMovementState>();
+            }
+            else if(!_goingBackOnBase)
+            {
+                SetDefaultState();
+                _sprite.color = _defaultColor;
+            }
         }
         
         private void CheckForTarget()
         {
+            if(_isPacmanRevenge || _goingBackOnBase) return;
             if (_targetTransform==null)
             {
                 var targetCollider = Physics2D.OverlapCircle(transform.position, _targetDetectionRange,_targetLayerMask);
@@ -83,11 +104,41 @@ namespace GhostSystem
         {
             if (_targetLayerMask.Contains(other.gameObject.layer))
             {
-                if (!_attackPacman)
+                if (_isPacmanRevenge)
                 {
-                    _ghostHealth.LooseHeart();
+                    StartCoroutine(ReturningToBase());
                 }
             }
+        }
+
+        private IEnumerator ReturningToBase()
+        {
+            _goingBackOnBase = true;
+            ChangeMovementState<UncontrolledMovementState>();
+            
+            _pathWalker.SetDestination(_startNode,true);
+            _collider.enabled = false;
+            _sprite.color = _deathColor;
+
+            while (_pathWalker.IsMoving)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            
+            yield return new WaitForSeconds(_timeForHeal);
+            
+            if(!_isPacmanRevenge)
+            {
+                SetDefaultState();
+                _sprite.color = _defaultColor;
+            }
+            else
+            {
+                ChangeMovementState<ScaredMovementState>();
+                _sprite.color = _scaredColor;
+            }
+            _collider.enabled = true;
+            _goingBackOnBase = false;
         }
     }
 }

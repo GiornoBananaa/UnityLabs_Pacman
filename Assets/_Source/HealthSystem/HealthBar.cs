@@ -25,14 +25,22 @@ namespace PacmanSystem
                 _activeHearts.Push(Instantiate(_heartPrefab,_heartImagesParent));
             }
         }
-
+        
+        public void PlayDeathAnimation(float animationDuration)
+        {
+            
+        }
+        
         private void ChangeHeartsCount(int heartsCount)
         {
             for (int i = 0; i < _activeHearts.Count-heartsCount; i++)
             {
+                if(_activeHearts.Count==1)
+                    return;
                 _activeHearts.Pop().SetActive(false);
             }
         }
+        
         
         private void OnDestroy()
         {

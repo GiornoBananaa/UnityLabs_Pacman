@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 786638635085457495}
   - component: {fileID: 5032218828784680359}
   - component: {fileID: 3897510130750354709}
-  m_Layer: 6
+  m_Layer: 10
   m_Name: BigBonus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
