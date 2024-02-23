@@ -41,6 +41,7 @@ namespace Core
             List<IPacmanRevengeEffector> pacmanRevengeEffector = new List<IPacmanRevengeEffector>(_ghosts) { _pacmanCollisionDetector };
             AState[] gameStates =
             {
+                new RestartGameState(_pacman,_ghosts,_pacmanHealth),
                 new WinGameState(),
                 new LooseGameState(_pacman,_ghosts, _healthBar, _gameTimer),
                 new GameDefaultState(_scoreCounter),

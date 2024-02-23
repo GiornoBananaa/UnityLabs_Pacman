@@ -29,5 +29,11 @@ namespace PacmanSystem
 
             return false;
         }
+        
+        public void RestoreHealth()
+        {
+            HeartCount = MaxHeartCount;
+            OnHeartCountChange?.Invoke(HeartCount);
+        }
     }
 }

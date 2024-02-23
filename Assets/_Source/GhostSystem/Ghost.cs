@@ -75,6 +75,13 @@ namespace GhostSystem
                 _sprite.color = _defaultColor;
             }
         }
+
+        public void SetDefaultPosition()
+        {
+            transform.position = _startNode.Point;
+            _pathWalker.SetDirectPath(_startNode);
+            SetDefaultState();
+        }
         
         private void CheckForTarget()
         {
@@ -106,17 +113,17 @@ namespace GhostSystem
             {
                 if (_isPacmanRevenge)
                 {
-                    StartCoroutine(ReturningToBase());
+                    StartCoroutine(ReturningToBase(_timeForHeal));
                 }
             }
         }
 
-        private IEnumerator ReturningToBase()
+        private IEnumerator ReturningToBase(float healTime)
         {
             _goingBackOnBase = true;
             ChangeMovementState<UncontrolledMovementState>();
             
-            _pathWalker.SetDestination(_startNode,true);
+            _pathWalker.SetDestination(_startNode.NearNodes[0],true);
             _collider.enabled = false;
             _sprite.color = _deathColor;
 
@@ -124,8 +131,12 @@ namespace GhostSystem
             {
                 yield return new WaitForEndOfFrame();
             }
-            
-            yield return new WaitForSeconds(_timeForHeal);
+            _pathWalker.SetDestination(_startNode,true);
+            while (_pathWalker.IsMoving)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            yield return new WaitForSeconds(healTime);
             
             if(!_isPacmanRevenge)
             {

@@ -1,4 +1,5 @@
-﻿using PathSystem;
+﻿using DG.Tweening;
+using PathSystem;
 using UnityEngine;
 
 namespace PacmanSystem
@@ -6,6 +7,7 @@ namespace PacmanSystem
     public class Pacman: MonoBehaviour
     {
         [SerializeField] private PathNode _startNode;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
         private PacmanMovement _pacmanMovement;
         private bool _movementIsEnabled;
 
@@ -21,9 +23,15 @@ namespace PacmanSystem
                 _pacmanMovement.Move();
         }
 
-        public void PlayDeathAnimation(float animationDuration)
+        public void PlayDeathAnimation(float duration,float fadeDuration)
         {
-            
+            _spriteRenderer.DOFade(0,fadeDuration).SetLoops((int)(duration/fadeDuration),LoopType.Yoyo);
+        }
+        
+        public void SetDefaultPosition()
+        {
+            transform.position = _startNode.Point;
+            _pacmanMovement.SetCurrentNode(_startNode);
         }
         
         public void EnableMovement(bool enable)

@@ -26,7 +26,7 @@ namespace GhostSystem
         private void CheckForStateChange()
         {
             _timeForStateChange -= Time.deltaTime;
-            if (_timeForStateChange <= 0 && TargetIsInRange)
+            if (_attacksPlayer && _timeForStateChange <= 0 && TargetIsInRange)
             {
                 _timeForStateChange = Random.Range(_minStateChangeTime,_maxStateChangeTime);
                 _attacksPlayer = !_attacksPlayer;

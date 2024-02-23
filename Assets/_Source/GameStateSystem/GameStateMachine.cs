@@ -33,6 +33,7 @@ namespace GameStateSystem
             foreach (var state in states)
             {
                 _states.Add(state.GetType(),state);
+                state.SetOwner(this);
             }
         }
     }

@@ -66,17 +66,22 @@ namespace PathSystem
 
         public void SetDirectPath(Vector2 position, bool clearPath = true)
         {
-            PathNode nearestNode = CurrentNode.NearNodes[0];
-            float nearestNodeDistance = Vector2.Distance(nearestNode.Point, position);
-            for (int i = 1; i < CurrentNode.NearNodes.Length; i++)
+            PathNode nearestNode = null;
+            float currentNearestDistance = 100;
+            
+            foreach (var pathNode in CurrentNode.NearNodes)
             {
-                float newDistance = Vector2.Distance(CurrentNode.NearNodes[i].Point, position);
-                if (newDistance < nearestNodeDistance)
+                if(pathNode.IsBlocked)
+                    continue;
+                    
+                float newDistance = Vector2.Distance(pathNode.Point, position);
+                if (nearestNode == null || newDistance < currentNearestDistance)
                 {
-                    nearestNode = CurrentNode.NearNodes[i];
-                    nearestNodeDistance = newDistance;
+                    nearestNode = pathNode;
+                    currentNearestDistance = newDistance;
                 }
             }
+            
             if(clearPath)
                 _path.Clear();
             SetCurrentPathNode(nearestNode);
@@ -95,7 +100,6 @@ namespace PathSystem
             HashSet<PathNode> closedSet = new HashSet<PathNode>();
             Queue<PathNode> path = new Queue<PathNode>();
             PathNode nearestNode = start;
-            
             while (true)
             {
                 PathNode currentNearestNode = null;

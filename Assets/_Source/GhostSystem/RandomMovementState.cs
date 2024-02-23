@@ -13,8 +13,8 @@ namespace GhostSystem
                 PathNode nextNode = pathWalker.PreviousNode;
                 while (nextNode == pathWalker.PreviousNode)
                 {
-                    nextNode = pathWalker.CurrentNode.NearNodes
-                        [Random.Range(0, pathWalker.CurrentNode.NearNodes.Length)];
+                    int randomIndex = Random.Range(0, pathWalker.CurrentNode.NearNodes.Length);
+                    nextNode = pathWalker.CurrentNode.NearNodes[randomIndex];
                 }
                 pathWalker.SetDirectPath(nextNode);
             }

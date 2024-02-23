@@ -9,7 +9,7 @@ namespace PathSystem
     public class NodeConnectorEditor: Editor
     {
         private const string NearNodesProperty = "<NearNodes>k__BackingField";
-
+        
         private void OnSceneGUI()
         {
             Handles.BeginGUI();

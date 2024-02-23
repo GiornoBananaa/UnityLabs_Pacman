@@ -28,9 +28,11 @@ namespace GameStateSystem
             {
                 ghost.ChangeMovementState<NoMovementState>();
             }
-            _gameTimer.SetTimer(2);
-            _gameTimer.OnTimerEnd += PlayAnimations;
             _pacman.EnableMovement(false);
+            _gameTimer.SetTimer(_deathAnimationDuration);
+            _gameTimer.OnTimerEnd += RestartGame;
+            _pacman.PlayDeathAnimation(_deathAnimationDuration,0.3f);
+            _healthBar.PlayDeathAnimation(_deathAnimationDuration,0.3f);
         }
         
         public override void Exit()
@@ -41,15 +43,6 @@ namespace GameStateSystem
             }
             
             _pacman.EnableMovement(true);
-        }
-        
-        private void PlayAnimations()
-        {
-            _gameTimer.SetTimer(_deathAnimationDuration);
-            _gameTimer.OnTimerEnd -= PlayAnimations;
-            _gameTimer.OnTimerEnd += RestartGame;
-            _pacman.PlayDeathAnimation(_deathAnimationDuration);
-            _healthBar.PlayDeathAnimation(_deathAnimationDuration);
         }
         
         private void RestartGame()

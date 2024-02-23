@@ -8,24 +8,29 @@ namespace GameStateSystem
     public class RestartGameState: AState
     {
         private Pacman _pacman;
-        private HealthBar _healthBar;
+        private Health _health;
         private Ghost[] _ghosts;
         
-        public RestartGameState(Pacman pacman, Ghost[] ghosts, HealthBar healthBar)
+        public RestartGameState(Pacman pacman, Ghost[] ghosts, Health health)
         {
             _pacman = pacman;
             _ghosts = ghosts;
-            _healthBar = healthBar;
+            _health = health;
         }
         
         public override void Enter()
         {
-            throw new NotImplementedException();
+            _pacman.EnableMovement(true);
+            _pacman.SetDefaultPosition();
+            foreach (var ghost in _ghosts)
+            {
+                ghost.SetDefaultPosition();
+            }
+            _health.RestoreHealth();
+
+            Owner.ChangeState<GameDefaultState>();
         }
         
-        public override void Exit()
-        {
-            
-        }
+        public override void Exit() { }
     }
 }

@@ -28,6 +28,11 @@ namespace PacmanSystem
                 TurnBack(direction);
         }
 
+        public void SetCurrentNode(PathNode node)
+        {
+            _pathWalker.SetDirectPath(node);
+        }
+        
         public void Move()
         {
             if (_isMomentForTurn)
