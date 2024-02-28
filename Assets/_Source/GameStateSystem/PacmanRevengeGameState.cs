@@ -1,6 +1,7 @@
 ﻿using Audio;
 using Core;
 using PacmanSystem;
+using ScoreSystem;
 using UnityEngine;
 
 namespace GameStateSystem
@@ -9,10 +10,12 @@ namespace GameStateSystem
     {
         private IPacmanRevengeEffector[] _pacmanRevengeEffector;
         private AudioPlayer _audioPlayer;
+        private ScoreCounter _scoreCounter;
         private string _musicName;
         
-        public PacmanRevengeGameState(AudioPlayer audioPlayer,string musicName,params IPacmanRevengeEffector[] pacmanRevengeEffector)
+        public PacmanRevengeGameState(ScoreCounter scoreCounter,AudioPlayer audioPlayer,string musicName,params IPacmanRevengeEffector[] pacmanRevengeEffector)
         {
+            _scoreCounter = scoreCounter;
             _audioPlayer = audioPlayer;
             _musicName = musicName;
             _pacmanRevengeEffector = pacmanRevengeEffector;
@@ -25,6 +28,8 @@ namespace GameStateSystem
             {
                 effector.EnablePacmanRevenge(true);
             }
+
+            _scoreCounter.OnMaxScore += WinGame;
         }
         
         public override void Exit()
@@ -33,6 +38,12 @@ namespace GameStateSystem
             {
                 effector.EnablePacmanRevenge(false);
             }
+        }
+
+        private void WinGame()
+        {
+            _scoreCounter.OnMaxScore -= WinGame;
+            Owner.ChangeState<WinGameState>();
         }
     }
 }

@@ -10,7 +10,6 @@ namespace PathSystem
         private readonly Transform _transform;
         private Queue<PathNode> _path;
         private PathNode _currentNode;
-        private float _elapsedTime;
         private PathNode _previousNode;
         
         public PathNode CurrentNode => _currentNode;
@@ -91,7 +90,6 @@ namespace PathSystem
         private void SetCurrentPathNode(PathNode node)
         {
             IsMoving = true;
-            _elapsedTime = 0;
             _previousNode = _currentNode;
             _currentNode = node;
         }

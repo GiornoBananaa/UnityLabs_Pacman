@@ -37,6 +37,7 @@ namespace GameStateSystem
             foreach (var ghost in _ghosts)
             {
                 ghost.SetDefaultState();
+                ghost.SetDefaultPosition();
             }
             
             _pacman.SetDefaultPosition();

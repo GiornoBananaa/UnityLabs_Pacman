@@ -130,7 +130,6 @@ namespace Audio
         
         private void OnDestroy()
         {
-            Debug.Log("Save"+MusicVolume);
             PlayerPrefs.SetFloat("MusicVolume", MusicVolume);
             PlayerPrefs.SetFloat("SoundVolume", SoundVolume);
             PlayerPrefs.Save();

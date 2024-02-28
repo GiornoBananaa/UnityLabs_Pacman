@@ -1,6 +1,8 @@
 ﻿using Core;
 using GhostSystem;
 using PacmanSystem;
+using UI;
+using UnityEngine;
 
 namespace GameStateSystem
 {
@@ -11,12 +13,14 @@ namespace GameStateSystem
         private Pacman _pacman;
         private Ghost[] _ghosts;
         private Timer _gameTimer;
+        private EndGamePanel _lossPanel;
        
-        public LooseGameState(Pacman pacman, Ghost[] ghosts, Timer gameTimer)
+        public LooseGameState(Pacman pacman, Ghost[] ghosts, Timer gameTimer,EndGamePanel lossPanel)
         {
             _pacman = pacman;
             _ghosts = ghosts;
             _gameTimer = gameTimer;
+            _lossPanel = lossPanel;
         }
         
         public override void Enter()
@@ -28,7 +32,7 @@ namespace GameStateSystem
             
             _pacman.EnableMovement(false);
             _gameTimer.SetTimer(_deathAnimationDuration);
-            _gameTimer.OnTimerEnd += RestartGame;
+            _gameTimer.OnTimerEnd += OpenLossPanel;
             _pacman.PlayDeathAnimation(_deathAnimationDuration,0.3f);
         }
         
@@ -38,14 +42,14 @@ namespace GameStateSystem
             {
                 ghost.SetDefaultState();
             }
-            
+            _lossPanel.ClosePanel();
             _pacman.EnableMovement(true);
         }
         
-        private void RestartGame()
+        private void OpenLossPanel()
         {
-            _gameTimer.OnTimerEnd -= RestartGame;
-            Owner.ChangeState<RestartGameState>();
+            _gameTimer.OnTimerEnd -= OpenLossPanel;
+            _lossPanel.OpenPanel();
         }
     }
 }

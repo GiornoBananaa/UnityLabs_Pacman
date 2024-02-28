@@ -30,7 +30,6 @@ namespace ScoreSystem
         {
             _bonusScore += score;
             OnScoreChange?.Invoke(TotalScore);
-            CheckScore();
         }
 
         public void RestoreScore()
@@ -42,6 +41,7 @@ namespace ScoreSystem
         
         private void CheckScore()
         {
+            Debug.Log(_score);
             if (_score >= _maxScore)
                 OnMaxScore?.Invoke();
         }

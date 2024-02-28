@@ -7,6 +7,7 @@ using InputSystem;
 using Level;
 using PacmanSystem;
 using ScoreSystem;
+using UI;
 using UnityEngine;
 
 namespace Core
@@ -25,6 +26,9 @@ namespace Core
         [SerializeField] private SpecialBonusSpawner _specialBonusSpawner;
         [SerializeField] private SpecialBonusListView _specialBonusListView;
         [SerializeField] private AudioPlayer _audioPlayer;
+        [SerializeField] private EndGamePanel _winPanel;
+        [SerializeField] private EndGamePanel _lossPanel;
+        [SerializeField] private string _winMusicName;
         
         private LevelData _levelData;
         private GhostDataSO _ghostDataSO;
@@ -58,16 +62,17 @@ namespace Core
             {
                 new RestartGameState(_pacman,_ghosts,_pacmanHealth,_scoreCounter,_bonuses,
                     _specialBonusSpawner,_specialBonusListView,_audioPlayer,_levelData.StartGameMusic),
-                new WinGameState(),
-                new LooseGameState(_pacman,_ghosts, _gameTimer),
+                new WinGameState(_gameTimer,_pacman,_ghosts,_winPanel,_audioPlayer,_winMusicName),
+                new LooseGameState(_pacman,_ghosts, _gameTimer,_lossPanel),
                 new LooseLiveGameState(_pacman,_ghosts, _gameTimer),
                 new GameDefaultState(_scoreCounter, _audioPlayer),
-                new PacmanRevengeGameState(_audioPlayer,_levelData.PacmanRevengeMusic,pacmanRevengeEffector.ToArray()),
+                new PacmanRevengeGameState(_scoreCounter,_audioPlayer,_levelData.PacmanRevengeMusic,pacmanRevengeEffector.ToArray()),
             };
             _gameStateMachine = new GameStateMachine(gameStates);
             _pacmanCollisionDetector.Construct(_scoreCounter,_pacmanHealth,_gameStateMachine,_audioPlayer,
                 _levelData.BigBonusTime,_levelData.GhostKillScore,_levelData.BonusScore,_levelData.SpecialBonusScore);
-            
+            _lossPanel.Construct(_scoreCounter,_gameStateMachine);
+            _winPanel.Construct(_scoreCounter,_gameStateMachine);
             AMovementState[] movementStates =
             {
                 new NoMovementState(),
