@@ -38,6 +38,7 @@ namespace PathSystem
                 if (_path.Count == 0)
                 {
                     IsMoving = false;
+                    CheckTeleportation();
                     return true;
                 }
                 SetCurrentPathNode(_path.Dequeue());
@@ -132,6 +133,13 @@ namespace PathSystem
                     return path;
                 }
             }
+        }
+        
+        private void CheckTeleportation()
+        {
+            if(CurrentNode.NodeTeleport == null) return;
+            _transform.position = CurrentNode.NodeTeleport.Point;
+            SetCurrentPathNode(CurrentNode.NodeTeleport);
         }
     }
 }

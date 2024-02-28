@@ -8,15 +8,19 @@ namespace PacmanSystem
 {
     public class HealthBar: MonoBehaviour
     {
+        private const float _looseAnimationDuration = 2;
+        private const float _fadeDuration = 0.3f;    
+        
         [SerializeField] private RectTransform _heartImagesParent;
         [SerializeField] private GameObject _heartPrefab;
         private Stack<GameObject> _activeHearts;
         private Health _health;
         private float _maxHeartCount;
+        
 
         private void Start()
         {
-            _health.OnHeartCountChange += ChangeHeartsCount;
+            _health.OnHeartCountChange += PlayLiveLooseAnimation;
         }
 
         public void Construct(Health health,float maxHeartCount)
@@ -27,10 +31,14 @@ namespace PacmanSystem
             RestoreHeartIcons();
         }
         
-        public void PlayDeathAnimation(float duration,float fadeDuration)
+        private void PlayLiveLooseAnimation(int newCount)
         {
             Image heartImage= _activeHearts.Peek().GetComponentInChildren<Image>();
-            heartImage.DOFade(0,fadeDuration).SetLoops((int)(duration/fadeDuration),LoopType.Yoyo);
+            heartImage.DOFade(0,_fadeDuration).SetLoops((int)(_looseAnimationDuration/_fadeDuration),LoopType.Yoyo).OnComplete(
+                () =>
+                {
+                    ChangeHeartsCount(newCount);
+                });
         }
         
         private void ChangeHeartsCount(int newHeartsCount)

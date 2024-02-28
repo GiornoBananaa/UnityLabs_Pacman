@@ -1,5 +1,6 @@
 using System;
 using GameStateSystem;
+using UnityEngine;
 
 namespace ScoreSystem
 {
@@ -30,6 +31,13 @@ namespace ScoreSystem
             _bonusScore += score;
             OnScoreChange?.Invoke(TotalScore);
             CheckScore();
+        }
+
+        public void RestoreScore()
+        {
+            _score = 0;
+            _bonusScore = 0;
+            OnScoreChange?.Invoke(TotalScore);
         }
         
         private void CheckScore()

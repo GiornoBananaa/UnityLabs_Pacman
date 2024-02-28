@@ -15,5 +15,12 @@ MonoBehaviour:
   <LevelData>k__BackingField:
     <MaxScore>k__BackingField: 182
     <BonusScore>k__BackingField: 1
-    <BigBonusTime>k__BackingField: 4
+    <BigBonusTime>k__BackingField: 5
     <GhostKillScore>k__BackingField: 4
+    <SpecialBonusPrefab>k__BackingField: {fileID: 3434588260033964328, guid: 9531a2dee07e6d84c855315c04014adc, type: 3}
+    <SpecialBonusListIconPrefab>k__BackingField: {fileID: 8935961597704519614, guid: 4a69bdd0926490f47b74aa4af24fa3fc, type: 3}
+    <SpecialBonusSpawnCooldown>k__BackingField: 6
+    <SpecialBonusScore>k__BackingField: 5
+    <SpecialBonusMaxCount>k__BackingField: 4
+    <PacmanRevengeMusic>k__BackingField: Intermission
+    <StartGameMusic>k__BackingField: Beginning

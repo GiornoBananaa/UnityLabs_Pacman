@@ -1,7 +1,6 @@
 ﻿using Core;
 using GhostSystem;
 using PacmanSystem;
-using UnityEngine;
 
 namespace GameStateSystem
 {
@@ -10,15 +9,13 @@ namespace GameStateSystem
         private const float _deathAnimationDuration = 2;
         
         private Pacman _pacman;
-        private HealthBar _healthBar;
         private Ghost[] _ghosts;
         private Timer _gameTimer;
-        
-        public LooseGameState(Pacman pacman, Ghost[] ghosts, HealthBar healthBar, Timer gameTimer)
+       
+        public LooseGameState(Pacman pacman, Ghost[] ghosts, Timer gameTimer)
         {
             _pacman = pacman;
             _ghosts = ghosts;
-            _healthBar = healthBar;
             _gameTimer = gameTimer;
         }
         
@@ -28,11 +25,11 @@ namespace GameStateSystem
             {
                 ghost.ChangeMovementState<NoMovementState>();
             }
+            
             _pacman.EnableMovement(false);
             _gameTimer.SetTimer(_deathAnimationDuration);
             _gameTimer.OnTimerEnd += RestartGame;
             _pacman.PlayDeathAnimation(_deathAnimationDuration,0.3f);
-            _healthBar.PlayDeathAnimation(_deathAnimationDuration,0.3f);
         }
         
         public override void Exit()

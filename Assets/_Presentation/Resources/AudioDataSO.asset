@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5e1edf404245eb832cee79d5fdeda9, type: 3}
+  m_Name: AudioDataSO
+  m_EditorClassIdentifier: 
+  <Sounds>k__BackingField:
+  - IsMusic: 0
+    Name: MiniBonus
+    Volume: 0.51
+    Pitch: 1
+    PitchVariation: 0
+    Loop: 1
+    PlayOnAwake: 0
+    Clips:
+    - {fileID: 8300000, guid: 4c9642f0ed2c765488ef2f65e3dc8f79, type: 3}
+  - IsMusic: 0
+    Name: EatFruit
+    Volume: 0.51
+    Pitch: 1
+    PitchVariation: 0
+    Loop: 0
+    PlayOnAwake: 0
+    Clips:
+    - {fileID: 8300000, guid: da10ddc42c3099642b30d13e808a016a, type: 3}
+  - IsMusic: 0
+    Name: EatGhost
+    Volume: 0.51
+    Pitch: 1
+    PitchVariation: 0
+    Loop: 0
+    PlayOnAwake: 0
+    Clips:
+    - {fileID: 8300000, guid: 07aa3675b81e3d243bc10ce5e9d06c61, type: 3}
+  - IsMusic: 0
+    Name: Death
+    Volume: 0.51
+    Pitch: 1
+    PitchVariation: 0
+    Loop: 0
+    PlayOnAwake: 0
+    Clips:
+    - {fileID: 8300000, guid: d804be60b75ee4b4ebc83664c3416ca9, type: 3}
+  - IsMusic: 1
+    Name: Beginning
+    Volume: 0.51
+    Pitch: 1
+    PitchVariation: 0
+    Loop: 0
+    PlayOnAwake: 0
+    Clips:
+    - {fileID: 8300000, guid: 9fa8e80d230dea943942d505378a986b, type: 3}
+  - IsMusic: 1
+    Name: Intermission
+    Volume: 0.51
+    Pitch: 1
+    PitchVariation: 0
+    Loop: 0
+    PlayOnAwake: 0
+    Clips:
+    - {fileID: 8300000, guid: ae00c817a91d67c4db2b91d91aefe98b, type: 3}
